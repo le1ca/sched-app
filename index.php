@@ -320,19 +320,15 @@ if(isset($_GET['change_pw'])){
         return makeOptionsList(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], sel);
     }
 
-    // remove timzeone from moment (necessary when parsing time from string)
-    function normalizeTime(m){
-        return moment(m).utc().subtract('m', moment().zone());
-    }
-
     // return true iff start >= daystart and end <= dayend
     function checkConstraints(event){
+    
         // make sure start is after daystart
-        if(moment(event.start).isBefore(normalizeTime(event.start.format("YYYY-MM-DD") + " " + daystart)))
+        if(moment(event.start).isBefore(event.start.format("YYYY-MM-DD") + "T" + daystart + ".000Z"))
             return false;
 
         // make sure end is before dayend
-        if(moment(event.end).isAfter(normalizeTime(event.start.format("YYYY-MM-DD") + " " + dayend)))
+        if(moment(event.end).isAfter(event.start.format("YYYY-MM-DD") + "T" + dayend + ".000Z"))
             return false;
 
         return true;
@@ -360,14 +356,22 @@ if(isset($_GET['change_pw'])){
 			$('#calendar').fullCalendar('renderEvent', eventData, true);
     }
 
+    // strip timezone and normalize time
+    function normalizeTime(m){
+        return moment(m).utc().subtract('minutes', moment().zone());
+    }
+
     // event edit form submit callback
     function updateEvent(form, eid){
         var doupdate = false;
         var event    = $("#calendar").fullCalendar('clientEvents', eid)[0];
-        var newstart = normalizeTime(moment(basedate + " " + form.start.value).day(form.dow.value));
-        var newend   = normalizeTime(moment(basedate + " " + form.end.value).day(form.dow.value));
+        var newstart = normalizeTime(moment(basedate + " " + form.start.value , "YYYY-MM-DD HH:mm a").day(form.dow.value));
+        var newend   = normalizeTime(moment(basedate + " " + form.end.value   , "YYYY-MM-DD HH:mm a").day(form.dow.value));
         var newtitle = form.type.value;
         var newclass = (form.type.value == "Preference") ? "pref_event" : "conf_event";
+
+        console.log("new start : " + newstart.format());
+        console.log("new end   : " + newend.format());
 
         // submit
         if(form.subopt == "Submit"){
