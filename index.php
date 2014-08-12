@@ -1,15 +1,10 @@
 <?php
 
-session_start();
+require_once 'include/functions.inc.php';
+require_once 'classes/database_class.php';
+require_once 'classes/session_class.php';
 
-require_once 'sql_class.php';
-require_once 'session_class.php';
-
-// sql config
-$sql_host      = 'localhost';
-$sql_user      = 'proctor-schedule';
-$sql_pass      = 'sql_password_goes_here';
-$sql_db        = 'proctor-schedule';
+require_once 'sql_globals.inc.php';
 
 // create objects
 $database     = Database::Connect($sql_host, $sql_user, $sql_pass, $sql_db);
@@ -33,6 +28,37 @@ if(isset($_GET['post_events'])){
         $user_session->add_event($e['type'], $e['start'], $e['end']);
     }
     exit;
+}
+
+if(isset($_GET['change_pw'])){
+    if(isset($_POST['username'], $_POST['password_old'], $_POST['password_new'], $_POST['password_ver'])){
+        $id = $database->check_user_password($_POST['username'], $_POST['password_old']);
+        
+        if($id != $user_session->get_id()){
+            show_template("change_pw.html", array(
+                "MESSAGE"  => "<p class='msg'>Error: Old password was incorrect.</p>",
+                "USERNAME" => htmlspecialchars($user_session->get_name())
+            ));
+        }
+        elseif($_POST['password_new'] != $_POST['password_ver']){
+            show_template("change_pw.html", array(
+                "MESSAGE" => "<p class='msg'>Error: New password and verify password did not match.</p>",
+                "USERNAME" => htmlspecialchars($user_session->get_name())
+            ));
+        }
+        else{
+            $database->update_user_password($id, $_POST['password_new']);
+            $_SESSION['message'] = "Your password has been updated.";
+            header('location: ./');
+            exit;
+        }
+    }
+    else{
+        show_template("change_pw.html", array(
+            "USERNAME" => htmlspecialchars($user_session->get_name()),
+            "MESSAGE" => ""
+        ));
+    }
 }
 
 ?>
@@ -201,6 +227,15 @@ if(isset($_GET['post_events'])){
             color:#ffffff;
             font-size:24pt;
         }
+
+        p.msg{
+            color:#a00000;
+            font-weight:bold;
+            margin-bottom:20px;
+            border:1px solid #500000;
+            border-radius:12px;
+            padding:10px;
+        }
     </style>
     <script type="text/javascript">
     var basedate  = '2014-08-10'; // we hide the actual date and only use the day of week, so it doesn't really matter what this is
@@ -214,6 +249,11 @@ if(isset($_GET['post_events'])){
     // log out
     function logout(){
         window.location="./?logout";
+    }
+
+    // change password
+    function changepw(){
+        window.location="./?change_pw";
     }
 
     // push events to server
@@ -519,7 +559,12 @@ if(isset($_GET['post_events'])){
     <div id="dialog"><h1>Loading...</h1></div>
     <div class="cal_cont">
         <h2>proctor schedule</h2>
-
+        <?php
+            if(isset($_SESSION['message'])){
+                echo "<p class='msg'>{$_SESSION['message']}</p>";
+                unset($_SESSION['message']);
+            }
+        ?>
         <div id="controls">
             <table id='btype'>
                 <tr>
@@ -546,7 +591,7 @@ if(isset($_GET['post_events'])){
                     <th colspan="2">Account</th>
                 </tr>
                 <tr>
-                    <td onclick='void(null)'>Logged in as <?php echo $user_session->get_name(); ?></td>
+                    <td onclick='changepw()'>Logged in as <?php echo $user_session->get_name(); ?></td>
                     <td onclick='logout()'>Log out</td>
                 </tr>
             </table>

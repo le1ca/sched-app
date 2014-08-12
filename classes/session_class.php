@@ -20,8 +20,6 @@ class Session {
     private $admin;
     
     private $database;
-    
-    private static $realm = 'Proctor Scheduling';
 
     public static function Initialize(){
         if(Session::$instance != null)
@@ -39,6 +37,12 @@ class Session {
     }
 
     private function __construct(){
+
+        $cookie_path = dirname($_SERVER['SCRIPT_NAME']);
+        session_set_cookie_params(3600, $cookie_path, $_SERVER['HTTP_HOST']);
+        session_name("procsched_session");
+        session_start();
+    
         $this->database = Database::GetInstance();
         
         $this->authorized = false;
@@ -47,12 +51,12 @@ class Session {
             unset($_SESSION['user_authed']);
             unset($_SESSION['user_id']);
             session_destroy();
+            show_template("login.html", array("MESSAGE" => "<p class='msg'>You are now logged out.</p>"));
         }
 
         // ask user to log in
         if(!isset($_SESSION['user_authed'], $_SESSION['user_id']) && !isset($_POST['username'], $_POST['password'])) {
-            echo file_get_contents("login.html");
-            exit;
+            show_template("login.html", array("MESSAGE" => ""));
         }
         // verify credentials
         elseif(isset($_POST['username'], $_POST['password'])){
@@ -63,8 +67,7 @@ class Session {
             $id = $this->database->check_user_password($user, $pass);
 
             if($id === FALSE){
-                echo "Invalid username or password.";
-                exit;
+                show_template("login.html", array("MESSAGE" => "<p class='msg'>Invalid username or password.</p>"));
             }
             else{
                 $this->get_user_data($id);
@@ -101,6 +104,10 @@ class Session {
 
     public function get_name(){
         return $this->username;
+    }
+
+    public function get_id(){
+        return $this->user_id;
     }
 
     public function get_calendar_id(){

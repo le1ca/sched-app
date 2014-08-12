@@ -41,10 +41,16 @@ class Database {
 
         $r = $q->fetch_assoc();
 
-        if(hash("sha256", $password.$r['pw_salt']) != $r['pw_hash'])
+        if(hash("sha256", $r['pw_salt'].$password) != $r['pw_hash'])
             return false;
 
         return $r['id'];
+    }
+
+    public function update_user_password($userid, $password){
+        $salt = bin2hex(openssl_random_pseudo_bytes(4));
+        $hash = hash("sha256", $salt.$password);
+        $this->mysqli->query("UPDATE `users` SET `pw_salt`='".$this->escape($salt)."', `pw_hash`='$hash' WHERE `id`='".intval($userid)."'");
     }
 
     public function get_user_data($user_id){

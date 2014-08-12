@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proctor Scheduling :: Change password</title>
+    <style type='text/css'>
+        body{
+            font-size:10pt;
+            font-family:Arial, sans-serif;
+            width:400px;
+            margin:auto;
+        }
+
+        p.msg{
+            color:#a00000;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>proctor schedule</h2>
+    <h3>change password</h3>
+    %MESSAGE%
+    <form action="./?change_pw" method="post">
+        <table>
+            <tr>
+                <td>Username</td>
+                <td><input name="username" readonly="readonly" value="%USERNAME%"/></td>
+            </tr>
+            <tr>
+                <td>Old Password</td>
+                <td><input name="password_old" type="password"/></td>
+            </tr>
+            <tr>
+                <td>New Password</td>
+                <td><input name="password_new" type="password"/></td>
+            </tr>
+            <tr>
+                <td>Verify Password</td>
+                <td><input name="password_ver" type="password"/></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type='submit' value="Change password &rarr;"/></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
