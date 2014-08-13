@@ -97,12 +97,9 @@ class Database {
             throw new DatabaseException("Could not update data for user #$id in Database");
     }
 
-    public function get_events($id){
+    public function get_calendar_list(){
         $a = array();
-        $q = $this->mysqli->query("SELECT `type`,`start`,`end` FROM `events` WHERE `user_id` = '".$this->escape($id)."'");
-
-        if($q === FALSE)
-            return false;
+        $q = $this->mysqli->query("SELECT * FROM `calendars`");
 
         while($r = $q->fetch_assoc()){
             $a[] = $r;
@@ -111,14 +108,43 @@ class Database {
         return $a;
     }
 
-    public function clear_events($id){
-        $this->mysqli->query("DELETE FROM `events` WHERE `user_id` = '".$this->escape($id)."'");
+    public function get_events($uid, $cid){
+        $a = array();
+        $m = $this->calendar_is_mutable($cid);
+        $q = $this->mysqli->query("SELECT `type`,`start`,`end`,`mutable` FROM `events` WHERE `user_id` = '".$this->escape($uid)."' AND  `cal_id` = '".$this->escape($cid)."'");
+
+        if($q === FALSE)
+            return false;
+
+        while($r = $q->fetch_assoc()){
+            if(!$m)
+                $r['mutable'] = 0;
+            $a[] = $r;
+        }
+
+        return $a;
     }
 
-    public function add_event($id, $type, $start, $end){
-        $this->mysqli->query("INSERT INTO `events` (`user_id`, `type`, `start`, `end`) ".
-                             "VALUES ('".$this->escape($id)."', '".$this->escape($type)."', '".$this->escape($start)."', '".$this->escape($end)."')"
+    public function clear_events($uid, $cid){
+        $this->mysqli->query("DELETE FROM `events` WHERE `user_id` = '".$this->escape($uid)."' AND `cal_id` = '".$this->escape($cid)."'");
+    }
+
+    public function add_event($uid, $cid, $type, $start, $end){
+        $this->mysqli->query("INSERT INTO `events` (`user_id`, `cal_id`, `type`, `start`, `end`) ".
+                             "VALUES ('".$this->escape($uid)."', '".$this->escape($cid)."', '".$this->escape($type)."', '".$this->escape($start)."', '".$this->escape($end)."')"
                             );
+    }
+
+    public function calendar_is_mutable($cid){
+        $q = $this->mysqli->query("SELECT `mutable` FROM `calendars` WHERE `cal_id` = '".$this->escape($cid)."'");
+        $r = $q->fetch_array();
+        return $r[0];
+    }
+
+    public function get_calendar_name($cid){
+        $q = $this->mysqli->query("SELECT `name` FROM `calendars` WHERE `cal_id` = '".$this->escape($cid)."'");
+        $r = $q->fetch_array();
+        return $r[0];
     }
 
     private function escape($str){

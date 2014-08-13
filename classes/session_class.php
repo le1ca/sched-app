@@ -118,16 +118,20 @@ class Session {
         $this->calendar_id = $id;
     }
 
-    public function get_events(){
-        return $this->database->get_events($this->user_id);
+    public function get_events($cid){
+        return $this->database->get_events($this->user_id, $cid);
     }
 
-    public function clear_events(){
-        return $this->database->clear_events($this->user_id);
+    public function clear_events($cid){
+        return $this->database->clear_events($this->user_id, $cid);
     }
 
-    public function add_event($type, $start, $end){
-        return $this->database->add_event($this->user_id, $type, $start, $end);
+    public function add_event($cid, $type, $start, $end){
+        return $this->database->add_event($this->user_id, $cid, $type, $start, $end);
+    }
+
+    public function is_admin(){
+        return $this->admin == 1;
     }
 
 }

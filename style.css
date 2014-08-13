@@ -1,0 +1,245 @@
+body{
+	position:absolute;
+	margin:0px;
+	padding:0px;
+	height:100%;
+	width:100%;
+	font-size:10pt;
+	font-family:Arial, sans-serif;
+	background:#cccccc;
+ }
+
+ #calhead{
+    border-top:1px solid;
+    padding-top:20px;
+ }
+
+ #calhead h3{
+    font-size:16pt;
+    padding:0px 0px 16px 0px;
+    margin:0px;
+    text-align:center;
+ }
+ 
+ #calendar{
+    width:800px;
+    padding-bottom:20px;
+    border-bottom:1px solid;
+ }
+ 
+ .fc-header{
+	display:none;
+ }
+ .fc-state-highlight{
+	background:inherit;
+ }
+ .fc-event-title{
+	text-align:center;
+ }
+
+ #bg{
+    display:block;
+    position:fixed;
+    z-index:-9999;
+    width:800px;
+    left:50%;
+    height:100%;
+    top:0px;
+	margin:0px 0px 0px -410px;
+	padding:0px 10px 0px 10px;
+	background:#ffffff;
+ }
+ 
+ .cal_cont{
+    margin:auto;
+	width:800px;
+	color:#000000;
+ }
+
+ h2{
+    margin-bottom:0px;
+    padding-bottom:0px;
+ }
+
+ h4{
+   margin-top:0px;
+   padding-top:0px; 
+ }
+ 
+ #controls{
+	margin-bottom:20px;
+	text-align:center;
+    border-top:1px solid;
+    padding-top:20px;
+ }
+ #controls table th{
+	border-bottom:1px solid;
+ }
+ #controls table.btable td{
+	width:60px;
+	text-align:center;
+	border-radius:5px;
+	border:1px solid #000000;
+ }
+ #controls table{
+	border:1px solid #000000;
+	border-radius:4px;
+	margin:auto;
+	display:inline-block;
+ }
+ #controls table+table{
+	margin-left:22px;
+ }
+ #controls table td{
+	height:32px;
+	width:60px;
+	font-size:8.5pt;
+	padding:2px;
+ }
+ 
+ #controls table.btable td:hover, #controls table.btable td.selected, #controls table.btable td:active{
+	box-shadow: inset 0px 0px 3px rgba(0,0,0,0.4);
+	cursor:pointer;
+ }
+ 
+ #controls table.btable td:nth-child(1){
+	background-color:rgba(0,150,0,0.1);
+ }
+ #controls table.btable td.selected:nth-child(1), #controls table.btable td:nth-child(1):active{
+	background-color:rgba(0,150,0,0.7);
+	color:#ffffff;
+ }
+ #controls table.btable td:nth-child(2){
+	background-color:rgba(150,0,0,0.1);
+ }
+ #controls table.btable td.selected:nth-child(2), #controls table.btable td:nth-child(2):active{
+	background-color:rgba(150,0,0,0.7);
+	color:#ffffff;	
+ }
+ 
+ .pref_event{
+	background-color:rgba(0,150,0,0.8);
+	color:#000000;
+ }
+ .conf_event{
+	background-color:rgba(150,0,0,0.8);
+	color:#000000;
+ }
+
+ #dialog{
+	position:fixed;
+	padding-top:120px;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	z-index:9999;
+	background-color:rgba(0,0,0,0.7);
+	overflow:none;
+ }
+
+ #dialog form{
+	display:none;
+	background:#ffffff;
+	border:1px solid black;
+	margin:auto;
+	box-shadow:3px 4px 8px rgba(0,0,0,0.2);
+	padding:5px;
+	border-radius:6px;
+	width:240px;
+ }
+
+ #dialog form table{
+	width:240px;
+ }
+
+ #dialog table td:first-child{
+	text-align:right;
+	width:38%;
+	font-weight:bold;
+ }
+
+ #dialog table th{
+	border-bottom:1px solid;
+	padding-bottom:2px;
+	font-size:12pt;
+ }
+
+ #dialog table tr:nth-child(2) td{
+	padding-top:9px;
+ }
+
+ #dialog_proto{
+	display:none;
+ }
+
+ .submitrow td{
+	padding-top:10px;
+	text-align:center !important;
+ }
+
+ .visible{
+	display:block;
+ }
+
+ #dialog form button:hover, #dialog form input[type="submit"]:hover{
+	cursor:pointer;
+ }
+
+ #dialog h1, #dialog h2, #dialog h3{
+	text-align:center;
+	padding:0px;
+	margin:4px;
+	color:#ffffff;
+ }
+
+ #dialog h1{
+	font-size:24pt;
+ }
+
+ #dialog h2{
+	font-size:18pt;
+ }
+
+ #dialog h3{
+    font-size:14pt;
+ }
+
+ p.msg{
+	color:#a00000;
+	font-weight:bold;
+	margin-bottom:20px;
+	border:1px solid #500000;
+	border-radius:5px;
+	padding:10px;
+ }
+
+ p.msg:hover{
+    cursor:pointer;
+ }
+
+ p.msg .meta{
+    font-weight:normal;
+    display:block;
+    margin-top:6px;
+    font-size:8pt;
+ }
+
+ p.err{
+    color:#ffffff;
+    font-weight:bold;
+    width:350px;
+    margin:8px auto auto auto;
+    text-align:center;
+ }
+
+ #romsg{
+    display:none;
+    color:#800000;
+    font-weight:bold;
+    text-align:center;
+    width:200px;
+    margin:auto;
+    margin-top:-15px;
+    margin-bottom:15px;
+ }
